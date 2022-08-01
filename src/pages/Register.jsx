@@ -122,7 +122,7 @@ const Register = () => {
           sx={{ mt: 3, mb: 2 }}
           variant="outlined"
           fullWidth
-          color="success"
+          color="primary"
           type="submit"
           loading={loading}
         >

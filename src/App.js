@@ -9,10 +9,13 @@ import Memo from "./pages/Memo";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import blue from "@mui/material/colors/blue";
+import { purple } from "@mui/material/colors";
 
 function App() {
   const theme = createTheme({
-    palette: { mode: "dark" },
+    palette: { primary: blue },
+    // palette: { mode: "dark" },
   });
   return (
     <ThemeProvider theme={theme}>

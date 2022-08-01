@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import authUtils from "../../utils/authUtils";
 import Loading from "../common/Loading";
+import notionLogo from "../../assets/images/notion-logo.png";
 
 const AuthLayout = () => {
   const navigate = useNavigate();
@@ -41,9 +42,15 @@ const AuthLayout = () => {
             display: "flex",
             alignItems: "center",
             flexDirection: "column",
+            marginTop: 6,
           }}
         >
-          Notion App
+          <img
+            src={notionLogo}
+            alt=""
+            style={{ width: 100, height: 100, marginBottom: 3 }}
+          />
+          Notionクローン開発
           <Outlet />
         </Box>
       </Container>
