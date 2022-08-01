@@ -4,7 +4,7 @@ import AppLayout from "./components/layout/AppLayout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
-import Board from "./pages/Board";
+import Memo from "./pages/Memo";
 
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -25,8 +25,8 @@ function App() {
             </Route>
             <Route path="/" element={<AppLayout />}>
               <Route index element={<Home />} />
-              <Route path="boards" element={<Home />} />
-              <Route path="boards/:boardId" element={<Board />} />
+              <Route path="memo" element={<Home />} />
+              <Route path="memo/:boardId" element={<Memo />} />
             </Route>
           </Routes>
         </BrowserRouter>

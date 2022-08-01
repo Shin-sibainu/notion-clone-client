@@ -77,6 +77,7 @@ const Register = () => {
           setConfirmPasswordErrText(e.msg);
         }
       });
+      setLoading(false);
     }
   };
   return (

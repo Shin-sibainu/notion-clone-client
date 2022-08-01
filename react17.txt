@@ -1,14 +1,4 @@
-2022/05/07現在、npx create-react-app <プロジェクト名> した場合、React18がインストールされます。
-react-beautiful-dndはこのバージョンに未だ対応しておりませんので
-
-ドラッグ＆ドロップが操作ができなくなっています。
-手動で旧バージョン(React 17)に戻せば動くので手順を以下に示します。
-
-前提
-
-次の動画で説明している「16. ドラッグ&ドロップを実装しよう」でnpx create-react-app <プロジェクト名>を実行済み
-
-手順
+🌟Rect18からReact17へダウングレードする手順
 
 1. package.jsonの"dependencies"を下記の通りに書き換える
 
@@ -39,5 +29,5 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
-これで正常にreact-beautiful-dndが利用できます。
-
+これで正常に後半で説明するreact-beautiful-dndで
+ドラッグアンドドロップが実装できるようになります。

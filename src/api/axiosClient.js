@@ -17,7 +17,7 @@ axiosClient.interceptors.request.use(async (config) => {
     ...config,
     headers: {
       "Content-Type": "application/json",
-      authorization: `Bearer ${getToken()}`,
+      authorization: `Bearer ${getToken()}`, //リクエストヘッダにトークンを付けてサーバーに渡す
     },
   };
 });
