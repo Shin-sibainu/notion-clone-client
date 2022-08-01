@@ -95,7 +95,7 @@ const Login = () => {
           type="submit"
           loading={loading}
         >
-          アカウント作成
+          ログイン
         </LoadingButton>
       </Box>
       <Button component={Link} to="/register" sx={{ textTransform: "none" }}>

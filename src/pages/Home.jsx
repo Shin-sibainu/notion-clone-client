@@ -37,7 +37,7 @@ const Home = () => {
       <LoadingButton
         variant="outlined"
         color="success"
-        onClick={createMemo}
+        onClick={() => createMemo}
         loading={loading}
       >
         最初のメモを作成

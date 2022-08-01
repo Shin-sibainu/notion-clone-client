@@ -4,7 +4,7 @@ const assets = {
     // appIcon: require("./images/favicon.png"),
   },
   colors: {
-    secondary: "#292929",
+    secondary: "#f7f7f7",
   },
 };
 
