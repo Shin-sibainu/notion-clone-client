@@ -29,7 +29,7 @@ function App() {
             <Route path="/" element={<AppLayout />}>
               <Route index element={<Home />} />
               <Route path="memo" element={<Home />} />
-              <Route path="memo/:boardId" element={<Memo />} />
+              <Route path="memo/:memoId" element={<Memo />} />
             </Route>
           </Routes>
         </BrowserRouter>

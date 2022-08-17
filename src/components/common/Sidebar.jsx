@@ -23,7 +23,7 @@ const Sidebar = () => {
   const dispatch = useDispatch();
   const { memoId } = useParams();
   const user = useSelector((state) => state.user.value);
-  const memo = useSelector((state) => state.memo.value);
+  const memos = useSelector((state) => state.memo.value);
   // console.log(memo);
   const sidebarWidth = 250;
 
@@ -32,8 +32,8 @@ const Sidebar = () => {
     const getMemos = async () => {
       try {
         const res = await memoApi.getAll();
-        console.log(res); //配列として返ってきてない。
-        console.log(res.length); //ここがとれてない
+        // console.log(res); //配列として返ってきてない。
+        // console.log(res.length); //ここがとれてない
         //状態をグローバルに保存
         dispatch(setMemo(res));
       } catch (err) {
@@ -43,22 +43,38 @@ const Sidebar = () => {
     getMemos();
   }, [dispatch]);
 
+  //ここが毎回発火してしまってる。
   useEffect(() => {
-    const activeItem = memo.findIndex((e) => e.id === memoId);
+    const activeItem = memos.findIndex((e) => e.id === memoId);
     //📝が１つ以上あり、かつmemoIdがundefinedじゃない時
-    if (memo.length > 0 && memoId === undefined) {
-      navigate(`/memo/${memo[0].id}`);
+    if (memos.length > 0 && memoId === undefined) {
+      // navigate(`/memo/${memos[0].id}`);
     }
-    console.log(activeItem);
     setActiveIndex(activeItem);
-  }, [memo, memoId, navigate]);
+  }, [memos, memoId, navigate]);
 
   const logout = () => {
     localStorage.removeItem("token");
     navigate("/login");
   };
 
-  const onDragEnd = () => {};
+  const onDragEnd = () => {
+    //後で並び変える
+  };
+
+  const addMemo = async () => {
+    try {
+      console.log("addmemo");
+      const res = await memoApi.create();
+      console.log(res); //object
+      console.log(...memos); //配列の中身からobjectを取り出す
+      const newList = [res, ...memos];
+      dispatch(setMemo(newList));
+      navigate(`/memo/${res.id}`);
+    } catch (err) {
+      alert(err);
+    }
+  };
 
   return (
     <Drawer
@@ -126,7 +142,7 @@ const Sidebar = () => {
             <Typography variant="body2" fontWeight="700">
               プライベート
             </Typography>
-            <IconButton>
+            <IconButton onClick={() => addMemo()}>
               <AddBoxOutlinedIcon fontSize="small" />
             </IconButton>
           </Box>
@@ -138,7 +154,7 @@ const Sidebar = () => {
           >
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
-                {memo.map((item, index) => (
+                {memos.map((item, index) => (
                   <Draggable key={item.id} draggableId={item.id} index={index}>
                     {(provided, snapshot) => (
                       <ListItemButton
@@ -154,6 +170,7 @@ const Sidebar = () => {
                             ? "grab"
                             : "pointer!important",
                         }}
+                        // onClick={() => console.log(item.id)}
                       >
                         <Typography
                           variant="body2"
@@ -170,6 +187,7 @@ const Sidebar = () => {
                     )}
                   </Draggable>
                 ))}
+                {provided.placeholder}
               </div>
             )}
           </Droppable>

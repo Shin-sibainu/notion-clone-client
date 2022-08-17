@@ -15,7 +15,9 @@ const Home = () => {
   const createMemo = async () => {
     setLoading(true);
     try {
+      console.log("clicked");
       const res = await memoApi.create();
+      console.log(res);
       dispatch(setMemo(res));
       navigate(`/memo/${res.id}`); //memoに割り振られたidをパスに設定
     } catch (err) {
@@ -37,7 +39,7 @@ const Home = () => {
       <LoadingButton
         variant="outlined"
         color="success"
-        onClick={() => createMemo}
+        onClick={() => createMemo()}
         loading={loading}
       >
         最初のメモを作成
