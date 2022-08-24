@@ -3,16 +3,23 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import memoApi from "../api/memoApi";
-import StarOutlinedIcon from "@mui/icons-material/StartOutlined";
+import StarIcon from "@mui/icons-material/Star";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import { useDispatch, useSelector } from "react-redux";
+import { setMemo } from "../redux/features/memoSlice";
+import { setFavoriteList } from "../redux/features/favoriteSlice";
 
 const Memo = () => {
+  const dispatch = useDispatch();
   const { memoId } = useParams();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isFavorite, setIsFavorite] = useState(false);
   const [icon, setIcon] = useState("");
+
+  const memos = useSelector((state) => state.memo.value);
+  const favoriteMemos = useSelector((state) => state.favorites.value);
 
   useEffect(() => {
     const getMemo = async () => {
@@ -22,13 +29,71 @@ const Memo = () => {
         setDescription(res.description);
         setIsFavorite(res.favorite);
         setIcon(res.icon);
-        console.log(res);
+        // console.log(res);
       } catch (err) {
         alert(err);
       }
     };
     getMemo();
   }, [memoId]);
+
+  let timer;
+  const timeout = 500;
+
+  const updateTitle = async (e) => {
+    clearTimeout(timer);
+    const newTiele = e.target.value;
+    setTitle(newTiele);
+    let temp = [...memos];
+    const index = temp.findIndex((e) => e.id === memoId);
+    temp[index] = { ...temp[index], title: newTiele };
+
+    //お気に入り機能追加後に設定する
+    if (isFavorite) {
+      let tempFavorite = [...favoriteMemos];
+      const favoriteIndex = tempFavorite.findIndex((e) => e.id === memoId);
+      tempFavorite[favoriteIndex] = {
+        ...tempFavorite[favoriteIndex],
+        title: newTiele,
+      };
+      dispatch(setFavoriteList(tempFavorite));
+    }
+
+    dispatch(setMemo(temp));
+
+    timer = setTimeout(async () => {
+      try {
+        await memoApi.update(memoId, { title: newTiele });
+      } catch (err) {
+        alert(err);
+      }
+    }, timeout);
+  };
+
+  const updateDescription = (e) => {
+    clearTimeout(timer);
+    const newDescription = e.target.value;
+    setDescription(newDescription);
+
+    timer = setTimeout(async () => {
+      try {
+        await memoApi.update(memoId, { description: newDescription });
+      } catch (err) {
+        alert(err);
+      }
+    }, timeout);
+  };
+
+  const addFavorite = async () => {
+    try {
+      await memoApi.update(memoId, { favorite: !isFavorite });
+      // let newFavoriteMemos = [...favoriteMemos];
+      setIsFavorite(!isFavorite);
+      // dispatch(setFavoriteList(newFavoriteMemos));
+    } catch (err) {
+      alert(err);
+    }
+  };
 
   return (
     <>
@@ -41,9 +106,9 @@ const Memo = () => {
           // backgroundColor: "red",
         }}
       >
-        <IconButton>
+        <IconButton onClick={addFavorite} variant="outlined">
           {isFavorite ? (
-            <StarOutlinedIcon color="warning" />
+            <StarIcon color="warning" />
           ) : (
             <StarBorderOutlinedIcon />
           )}
@@ -56,6 +121,7 @@ const Memo = () => {
         <Box>{/* emoji picker */}</Box>
         <TextField
           value={title}
+          onChange={updateTitle}
           placeholder="無題"
           variant="outlined"
           fullWidth
@@ -67,6 +133,7 @@ const Memo = () => {
         />
         <TextField
           value={description}
+          onChange={updateDescription}
           placeholder="追加"
           variant="outlined"
           fullWidth

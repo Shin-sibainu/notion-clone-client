@@ -15,6 +15,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import memoApi from "../../api/memoApi";
 import { setMemo } from "../../redux/features/memoSlice";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import FavoriteList from "./FavoriteList";
 
 const Sidebar = () => {
   const [activeItem, setActiveIndex] = useState(0);
@@ -115,7 +116,8 @@ const Sidebar = () => {
           </Box>
         </ListItemButton>
         <Box sx={{ paddingTop: "10px" }}></Box>
-        <ListItemButton>
+        <FavoriteList />
+        {/* <ListItemButton>
           <Box
             sx={{
               width: "100%",
@@ -128,7 +130,7 @@ const Sidebar = () => {
               お気に入り
             </Typography>
           </Box>
-        </ListItemButton>
+        </ListItemButton> */}
         <Box sx={{ paddingTop: "10px" }}></Box>
         <ListItemButton>
           <Box
