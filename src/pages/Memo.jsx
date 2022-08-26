@@ -9,6 +9,7 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { setMemo } from "../redux/features/memoSlice";
 import { setFavoriteList } from "../redux/features/favoriteSlice";
+import EmojiPicker from "../components/common/EmojiPicker";
 
 const Memo = () => {
   const dispatch = useDispatch();
@@ -125,6 +126,10 @@ const Memo = () => {
     }
   };
 
+  const onIconChange = (newIcon) => {
+    setIcon(newIcon);
+  };
+
   return (
     <>
       <Box
@@ -150,6 +155,7 @@ const Memo = () => {
       <Box sx={{ padding: "10px 50px" }}>
         <Box>
           {/* emoji picker */}
+          <EmojiPicker icon={icon} onChange={onIconChange} />
           <TextField
             value={title}
             onChange={updateTitle}
