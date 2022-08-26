@@ -1,7 +1,7 @@
 import { Box, IconButton, TextField } from "@mui/material";
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import memoApi from "../api/memoApi";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
@@ -12,6 +12,7 @@ import { setFavoriteList } from "../redux/features/favoriteSlice";
 
 const Memo = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { memoId } = useParams();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -86,10 +87,39 @@ const Memo = () => {
 
   const addFavorite = async () => {
     try {
-      await memoApi.update(memoId, { favorite: !isFavorite });
-      // let newFavoriteMemos = [...favoriteMemos];
+      const memo = await memoApi.update(memoId, { favorite: !isFavorite });
+
+      let newFavoriteMemos = [...favoriteMemos];
+      if (isFavorite) {
+        newFavoriteMemos = newFavoriteMemos.filter((e) => e.id !== memoId);
+      } else {
+        //これが消えない。お気に入りに移動してほしい。
+        newFavoriteMemos.unshift(memo);
+      }
+      dispatch(setFavoriteList(newFavoriteMemos));
       setIsFavorite(!isFavorite);
-      // dispatch(setFavoriteList(newFavoriteMemos));
+    } catch (err) {
+      alert(err);
+    }
+  };
+
+  const deleteMemo = async () => {
+    try {
+      const deletedMemo = await memoApi.delete(memoId);
+      console.log(deletedMemo);
+
+      if (isFavorite) {
+        const newFavoriteMemos = favoriteMemos.filter((e) => e.id !== memoId);
+        dispatch(setFavoriteList(newFavoriteMemos));
+      }
+
+      const newMemos = memos.filter((e) => e.id !== memoId);
+      if (newMemos.length === 0) {
+        navigate("/memo");
+      } else {
+        navigate(`/memo/${newMemos[0].id}`);
+      }
+      dispatch(setMemo(newMemos));
     } catch (err) {
       alert(err);
     }
@@ -113,36 +143,38 @@ const Memo = () => {
             <StarBorderOutlinedIcon />
           )}
         </IconButton>
-        <IconButton variant="outlined" color="error">
+        <IconButton variant="outlined" color="error" onClick={deleteMemo}>
           <DeleteOutlinedIcon />
         </IconButton>
       </Box>
       <Box sx={{ padding: "10px 50px" }}>
-        <Box>{/* emoji picker */}</Box>
-        <TextField
-          value={title}
-          onChange={updateTitle}
-          placeholder="無題"
-          variant="outlined"
-          fullWidth
-          sx={{
-            ".MuiOutlinedInput-input": { padding: 0 },
-            ".MuiOutlinedInput-notchedOutline": { border: "unset" },
-            ".MuiOutlinedInput-root": { fontSize: "2rem", fontWeight: "700" },
-          }}
-        />
-        <TextField
-          value={description}
-          onChange={updateDescription}
-          placeholder="追加"
-          variant="outlined"
-          fullWidth
-          sx={{
-            ".MuiOutlinedInput-input": { padding: 0 },
-            ".MuiOutlinedInput-notchedOutline": { border: "unset" },
-            ".MuiOutlinedInput-root": { fontSize: "0,8rem" },
-          }}
-        />
+        <Box>
+          {/* emoji picker */}
+          <TextField
+            value={title}
+            onChange={updateTitle}
+            placeholder="無題"
+            variant="outlined"
+            fullWidth
+            sx={{
+              ".MuiOutlinedInput-input": { padding: 0 },
+              ".MuiOutlinedInput-notchedOutline": { border: "unset" },
+              ".MuiOutlinedInput-root": { fontSize: "2rem", fontWeight: "700" },
+            }}
+          />
+          <TextField
+            value={description}
+            onChange={updateDescription}
+            placeholder="追加"
+            variant="outlined"
+            fullWidth
+            sx={{
+              ".MuiOutlinedInput-input": { padding: 0 },
+              ".MuiOutlinedInput-notchedOutline": { border: "unset" },
+              ".MuiOutlinedInput-root": { fontSize: "0,8rem" },
+            }}
+          />
+        </Box>
       </Box>
     </>
   );
