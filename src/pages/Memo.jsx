@@ -126,8 +126,17 @@ const Memo = () => {
     }
   };
 
-  const onIconChange = (newIcon) => {
+  const onIconChange = async (newIcon) => {
+    let temp = [...memos];
+    const index = temp.findIndex((e) => e.id === memoId);
+    temp[index] = { ...temp[index], icon: newIcon };
     setIcon(newIcon);
+    dispatch(setMemo(temp));
+    try {
+      await memoApi.update(memoId, { icon: newIcon });
+    } catch (err) {
+      alert(err);
+    }
   };
 
   return (
