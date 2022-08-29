@@ -17,9 +17,12 @@ const EmojiPicker = (props) => {
 
   const selectEmoji = (e) => {
     const sym = e.unified.split("-");
+    // console.log(sym);
     let codesArray = [];
     sym.forEach((el) => codesArray.push("0x" + el));
+    // console.log(codesArray);
     const emoji = String.fromCodePoint(...codesArray);
+    // console.log(emoji);
     setIsShowPicker(false);
     props.onChange(emoji);
   };
